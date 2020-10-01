@@ -22,12 +22,14 @@ def check(url, word, output):
 def main(url, dictionary, output):
     p = urlparse(url)
     url = ''.join(['http://', p.netloc, p.path])
-    dict = open(dictionary, 'r')
     pool = multiprocessing.Pool()
-    for word in dict:
-        word = word.rstrip()
-        pool.apply_async(check, args=(url, word, output))
-    dict.close()
+
+    with open(dictionary,"r") as f:
+        words = f.readlines()
+
+        for word in words:
+            word = word.rstrip()
+            pool.apply_async(check, args=(url, word, output))
     pool.close()
     pool.join()
 
